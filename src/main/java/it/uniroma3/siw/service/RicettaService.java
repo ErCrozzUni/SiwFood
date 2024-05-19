@@ -12,34 +12,34 @@ import it.uniroma3.siw.repository.RicettaRepository;
 
 @Service
 public class RicettaService {
-	@Autowired
-	private RicettaRepository ricettaRepository;
+    @Autowired
+    private RicettaRepository ricettaRepository;
 
-	public Ricetta findById(Long id) {
-		return ricettaRepository.findById(id).get();
-	}
+    public Ricetta findById(Long id) {
+        return ricettaRepository.findById(id).get();
+    }
 
-	public Iterable<Ricetta> findAll() {
-		return ricettaRepository.findAll();
-	}
-	
-	public List<Ricetta> findRicetteByCuoco(Cuoco cuoco) {
+    public Iterable<Ricetta> findAll() {
+        return ricettaRepository.findAll();
+    }
+
+    public List<Ricetta> findRicetteByCuoco(Cuoco cuoco) {
         return ricettaRepository.findByCuoco(cuoco);
     }
-	
-	public Ricetta saveRicetta(Ricetta ricetta) {
-		return ricettaRepository.save(ricetta);
-	}
-	
-	public Optional<Ricetta> getRicetta(Long id) {
-		return ricettaRepository.findById(id);
-	}
 
-	public Iterable<Ricetta> getAllRicette() {
-		return ricettaRepository.findAll();
-	}
+    public Ricetta saveRicetta(Ricetta ricetta) {
+        return ricettaRepository.save(ricetta);
+    }
 
-	public void deleteRicetta(Long id) {
-		ricettaRepository.deleteById(id);
-	}
+    public Optional<Ricetta> getRicetta(Long id) {
+        return ricettaRepository.findById(id);
+    }
+
+    public Iterable<Ricetta> getAllRicette() {
+        return ricettaRepository.findAll();
+    }
+
+    public void deleteRicetta(Long id) {
+        ricettaRepository.deleteById(id);
+    }
 }

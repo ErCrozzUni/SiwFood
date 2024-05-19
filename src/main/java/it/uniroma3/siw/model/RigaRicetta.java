@@ -1,6 +1,10 @@
 package it.uniroma3.siw.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class RigaRicetta {
@@ -10,24 +14,14 @@ public class RigaRicetta {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "ingrediente_id")
     private Ingrediente ingrediente;
 
     private String quantita;
 
     @ManyToOne
-    @JoinColumn(name = "ricetta_id")
     private Ricetta ricetta;
 
-    // Costruttori
-    public RigaRicetta() {}
-
-    public RigaRicetta(Ingrediente ingrediente, String quantita) {
-        this.ingrediente = ingrediente;
-        this.quantita = quantita;
-    }
-
-    // Getter e Setter
+    // Getters and setters
     public Long getId() {
         return id;
     }

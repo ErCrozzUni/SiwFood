@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le Mie Ricette - SIW Food</title>
+    <title>Le Tue Ricette</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Font Awesome -->
@@ -28,26 +28,31 @@
             </div>
         </nav>
     </header>
-    <main class="d-flex flex-column align-items-center justify-content-center text-center flex-grow-1">
-        <section class="hero my-5">
-            <h1 class="mt-4">Le Mie Ricette</h1>
-            <div class="container">
-                <div class="row">
-                    <!-- Loop through ricette and display them -->
-                    <div class="col-md-4" th:each="ricetta : ${ricette}">
-                        <div class="card mb-4 shadow-sm">
-                            <div class="card-body">
-                                <h5 class="card-title" th:text="${ricetta.nome}">Nome Ricetta</h5>
-                                <p class="card-text" th:text="${ricetta.descrizione}">Descrizione Ricetta</p>
-                            </div>
+    <main class="container mt-5">
+        <h1>Le tue ricette</h1>
+        <div class="mt-4">
+            <div>
+                <h4>Le tue ricette</h4>
+                <ul class="list-group">
+                    <li th:each="ricetta : ${ricette}" class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <img th:src="@{${ricetta.immagine}}" alt="Immagine Ricetta" width="50" height="50" class="mr-3">
+                            <span th:text="${ricetta.nome}"></span>
                         </div>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <a href="/ricette/new" class="btn btn-primary">Aggiungi Ricetta</a>
-                </div>
+                        <div>
+                            <a th:href="@{'/ricette/edit/' + ${ricetta.id}}" class="btn btn-warning btn-sm">Modifica</a>
+                            <a th:href="@{'/ricette/delete/' + ${ricetta.id}}" class="btn btn-danger btn-sm">Elimina</a>
+                        </div>
+                    </li>
+                </ul>
             </div>
-        </section>
+            <div th:if="${#lists.isEmpty(ricette)}">
+                <p class="mt-3 text-muted">Aggiungi la tua prima ricetta!</p>
+            </div>
+            <div class="mt-3">
+                <a href="/ricette/new" class="btn btn-primary">Aggiungi nuova ricetta</a>
+            </div>
+        </div>
     </main>
     <footer class="text-white text-center py-3" style="background-color: #a080fc;">
         <p>&copy; 2024 SIW Food. All rights reserved.</p>
@@ -55,6 +60,6 @@
     <!-- Bootstrap JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.amazonaws.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

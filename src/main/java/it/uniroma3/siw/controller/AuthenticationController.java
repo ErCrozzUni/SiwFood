@@ -23,6 +23,7 @@ import it.uniroma3.siw.model.Cuoco;
 import it.uniroma3.siw.model.Utente;
 import it.uniroma3.siw.service.CredenzialiService;
 import it.uniroma3.siw.service.CuocoService;
+import it.uniroma3.siw.service.RicettaService;
 import it.uniroma3.siw.service.UtenteService;
 
 @Controller
@@ -36,6 +37,9 @@ public class AuthenticationController {
 
     @Autowired
     private CuocoService cuocoService;
+    
+    @Autowired
+    private RicettaService ricettaService;
 
     @GetMapping(value = "/register")
     public String showRegisterForm(Model model) {
@@ -71,8 +75,11 @@ public class AuthenticationController {
         if (credenziali.getRuolo().equals(Credenziali.ADMIN_ROLE)) {
             return "indexAmministratore";
         }
-        return "index";
+        Cuoco cuoco = cuocoService.findByUtente(credenziali.getUtente());
+        model.addAttribute("ricette", ricettaService.findRicetteByCuoco(cuoco));
+        return "success";
     }
+
 
     @PostMapping(value = { "/register" })
     public String registerUser(@RequestParam("nome") String nome,

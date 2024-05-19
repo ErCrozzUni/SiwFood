@@ -1,6 +1,9 @@
 package it.uniroma3.siw.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class Ingrediente {
@@ -11,14 +14,7 @@ public class Ingrediente {
 
     private String nome;
 
-    // Costruttori
-    public Ingrediente() {}
-
-    public Ingrediente(String nome) {
-        this.nome = nome;
-    }
-
-    // Getter e Setter
+    // Getters and setters
     public Long getId() {
         return id;
     }

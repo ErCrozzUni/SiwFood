@@ -1,15 +1,8 @@
 package it.uniroma3.siw.model;
 
+import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 
 @Entity
 public class Ricetta {
@@ -19,28 +12,16 @@ public class Ricetta {
     private Long id;
 
     private String nome;
+    private String descrizione;
     private String immagine;
 
-    @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RigaRicetta> ingredienti;
-
-    private String descrizione;
-
     @ManyToOne
-    @JoinColumn(name = "cuoco_id")
     private Cuoco cuoco;
 
-    // Costruttori
-    public Ricetta() {}
+    @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RigaRicetta> righeRicetta = new ArrayList<>();
 
-    public Ricetta(String nome, String immagine, String descrizione, Cuoco cuoco) {
-        this.nome = nome;
-        this.immagine = immagine;
-        this.descrizione = descrizione;
-        this.cuoco = cuoco;
-    }
-
-    // Getter e Setter
+    // Getters e setters
     public Long getId() {
         return id;
     }
@@ -57,28 +38,20 @@ public class Ricetta {
         this.nome = nome;
     }
 
-    public String getImmagine() {
-        return immagine;
-    }
-
-    public void setImmagine(String immagine) {
-        this.immagine = immagine;
-    }
-
-    public List<RigaRicetta> getIngredienti() {
-        return ingredienti;
-    }
-
-    public void setIngredienti(List<RigaRicetta> ingredienti) {
-        this.ingredienti = ingredienti;
-    }
-
     public String getDescrizione() {
         return descrizione;
     }
 
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
+    }
+
+    public String getImmagine() {
+        return immagine;
+    }
+
+    public void setImmagine(String immagine) {
+        this.immagine = immagine;
     }
 
     public Cuoco getCuoco() {
@@ -89,14 +62,22 @@ public class Ricetta {
         this.cuoco = cuoco;
     }
 
+    public List<RigaRicetta> getRigheRicetta() {
+        return righeRicetta;
+    }
+
+    public void setRigheRicetta(List<RigaRicetta> righeRicetta) {
+        this.righeRicetta = righeRicetta;
+    }
+
     // Metodi di utilità
     public void addRigaRicetta(RigaRicetta rigaRicetta) {
-        ingredienti.add(rigaRicetta);
+        righeRicetta.add(rigaRicetta);
         rigaRicetta.setRicetta(this);
     }
 
     public void removeRigaRicetta(RigaRicetta rigaRicetta) {
-        ingredienti.remove(rigaRicetta);
+        righeRicetta.remove(rigaRicetta);
         rigaRicetta.setRicetta(null);
     }
 }

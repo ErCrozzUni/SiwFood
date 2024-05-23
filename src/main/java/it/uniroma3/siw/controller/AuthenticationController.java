@@ -23,7 +23,6 @@ import it.uniroma3.siw.model.Cuoco;
 import it.uniroma3.siw.model.Utente;
 import it.uniroma3.siw.service.CredenzialiService;
 import it.uniroma3.siw.service.CuocoService;
-import it.uniroma3.siw.service.RicettaService;
 import it.uniroma3.siw.service.UtenteService;
 
 @Controller
@@ -37,49 +36,45 @@ public class AuthenticationController {
 
     @Autowired
     private CuocoService cuocoService;
-    
-    @Autowired
-    private RicettaService ricettaService;
+
+    private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
 
     @GetMapping(value = "/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("utente", new Utente());
         model.addAttribute("credenziali", new Credenziali());
-        return "register";
+        return "user/register";
     }
 
     @GetMapping(value = "/login")
     public String showLoginForm(Model model) {
-        return "login";
+        return "user/login";
     }
 
-    @GetMapping(value = "/home")
+    @GetMapping(value = "/")
     public String home(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof AnonymousAuthenticationToken) {
-            return "index";
+            return "user/index";
         } else {
             UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             Credenziali credenziali = credenzialiService.getCredenziali(userDetails.getUsername());
             if (credenziali.getRuolo().equals(Credenziali.ADMIN_ROLE)) {
-                return "indexAmministratore";
+                return "admin/adminIndex";
             }
         }
-        return "index";
+        return "user/index";
     }
 
-    @GetMapping(value = "/success")
+    @GetMapping(value = "/indexCuoco")
     public String defaultAfterLogin(Model model) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Credenziali credenziali = credenzialiService.getCredenziali(userDetails.getUsername());
         if (credenziali.getRuolo().equals(Credenziali.ADMIN_ROLE)) {
-            return "indexAmministratore";
+            return "admin/adminIndex";
         }
-        Cuoco cuoco = cuocoService.findByUtente(credenziali.getUtente());
-        model.addAttribute("ricette", ricettaService.findRicetteByCuoco(cuoco));
-        return "success";
+        return "cuoco/indexCuoco";
     }
-
 
     @PostMapping(value = { "/register" })
     public String registerUser(@RequestParam("nome") String nome,
@@ -91,6 +86,17 @@ public class AuthenticationController {
                                @RequestParam("immagine") MultipartFile immagine,
                                @RequestParam("descrizione") String descrizione,
                                Model model) {
+        // Salva l'immagine
+        StringBuilder fileNames = new StringBuilder();
+        Path fileNameAndPath = Paths.get(UPLOAD_DIR, immagine.getOriginalFilename());
+        fileNames.append(immagine.getOriginalFilename());
+        try {
+            Files.write(fileNameAndPath, immagine.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Crea e salva l'utente
         Utente utente = new Utente();
         utente.setNome(nome);
         utente.setCognome(cognome);
@@ -100,24 +106,16 @@ public class AuthenticationController {
         Credenziali credenziali = new Credenziali();
         credenziali.setUsername(username);
         credenziali.setPassword(password);
-        credenziali.setRuolo(Credenziali.DEFAULT_ROLE);
         credenziali.setUtente(utente);
 
         Cuoco cuoco = new Cuoco();
         cuoco.setNome(nome);
         cuoco.setCognome(cognome);
-        cuoco.setDataDiNascita(dataDiNascita);
+        cuoco.setDataDiNascita(LocalDate.parse(dataDiNascita)); // Conversione corretta
+        cuoco.setImmagine("/uploads/" + immagine.getOriginalFilename());
         cuoco.setDescrizione(descrizione);
-        try {
-            cuoco.setImmagine("/uploads/" + immagine.getOriginalFilename());
-            Path fileNameAndPath = Paths.get("src/main/resources/static/uploads/", immagine.getOriginalFilename());
-            Files.write(fileNameAndPath, immagine.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         cuoco.setUtente(utente);
 
-        utente.setCredenziali(credenziali);
         utente.setCuoco(cuoco);
 
         utenteService.saveUser(utente);
@@ -125,7 +123,6 @@ public class AuthenticationController {
         cuocoService.saveCuoco(cuoco);
 
         model.addAttribute("utente", utente);
-        return "registrationSuccessful";
+        return "user/registrationSuccessful";
     }
-
 }

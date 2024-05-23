@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,27 +26,27 @@ public class CuocoController {
     @Autowired
     private CuocoService cuocoService;
 
-    private static String UPLOAD_DIR = "src/main/resources/static/uploads/";
+    private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
 
     // Mostra tutti i cuochi
     @GetMapping
     public String showCuochi(Model model) {
         model.addAttribute("cuochi", cuocoService.findAll());
-        return "cuochi"; // restituisce il nome della vista
+        return "user/cuochi"; // restituisce il nome della vista
     }
 
     // Mostra un singolo cuoco per ID
     @GetMapping("/{id}")
     public String getCuoco(@PathVariable("id") Long id, Model model) {
         model.addAttribute("cuoco", this.cuocoService.findById(id));
-        return "cuoco"; // restituisce il nome della vista
+        return "user/cuoco"; // restituisce il nome della vista
     }
 
     // Visualizza il form per aggiungere un nuovo cuoco
     @GetMapping("/new")
     public String showNewCuocoForm(Model model) {
         model.addAttribute("cuoco", new Cuoco());
-        return "formNewCuoco"; // restituisce il nome della vista per il form
+        return "user/formNewCuoco"; // restituisce il nome della vista per il form
     }
 
     // Salva un nuovo cuoco
@@ -68,7 +69,7 @@ public class CuocoController {
         Cuoco cuoco = new Cuoco();
         cuoco.setNome(nome);
         cuoco.setCognome(cognome);
-        cuoco.setDataDiNascita(dataDiNascita);
+        cuoco.setDataDiNascita(LocalDate.parse(dataDiNascita)); // Conversione corretta
         cuoco.setImmagine("/uploads/" + immagine.getOriginalFilename()); // Imposta il percorso dell'immagine
 
         cuocoService.saveCuoco(cuoco);

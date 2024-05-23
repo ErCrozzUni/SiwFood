@@ -1,9 +1,6 @@
 package it.uniroma3.siw.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Ingrediente {
@@ -13,8 +10,9 @@ public class Ingrediente {
     private Long id;
 
     private String nome;
+    private String descrizione;
 
-    // Getters and setters
+    // Getters e setters
     public Long getId() {
         return id;
     }
@@ -29,5 +27,13 @@ public class Ingrediente {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
     }
 }

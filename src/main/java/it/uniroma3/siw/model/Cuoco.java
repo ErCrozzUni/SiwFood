@@ -1,6 +1,7 @@
 package it.uniroma3.siw.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,26 +14,15 @@ public class Cuoco {
 
     private String nome;
     private String cognome;
-    private String dataDiNascita;
+    private LocalDate dataDiNascita;
     private String immagine;
-    private String descrizione; // Nuovo campo descrizione
+    private String descrizione; 
 
     @OneToMany(mappedBy = "cuoco", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ricetta> ricette = new ArrayList<>();
 
     @OneToOne
     private Utente utente;
-
-    // Costruttori
-    public Cuoco() {}
-
-    public Cuoco(String nome, String cognome, String dataDiNascita, String immagine, String descrizione) {
-        this.nome = nome;
-        this.cognome = cognome;
-        this.dataDiNascita = dataDiNascita;
-        this.immagine = immagine;
-        this.descrizione = descrizione;
-    }
 
     // Getter e Setter
     public Long getId() {
@@ -59,11 +49,11 @@ public class Cuoco {
         this.cognome = cognome;
     }
 
-    public String getDataDiNascita() {
+    public LocalDate getDataDiNascita() {
         return dataDiNascita;
     }
 
-    public void setDataDiNascita(String dataDiNascita) {
+    public void setDataDiNascita(LocalDate dataDiNascita) {
         this.dataDiNascita = dataDiNascita;
     }
 

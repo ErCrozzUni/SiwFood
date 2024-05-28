@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import it.uniroma3.siw.model.Credenziali;
 import it.uniroma3.siw.model.Cuoco;
-import it.uniroma3.siw.model.Utente;
 import it.uniroma3.siw.service.CredenzialiService;
 import it.uniroma3.siw.service.CuocoService;
-import it.uniroma3.siw.service.UtenteService;
 
 @Controller
 public class AuthenticationController {
@@ -32,16 +31,16 @@ public class AuthenticationController {
     private CredenzialiService credenzialiService;
 
     @Autowired
-    private UtenteService utenteService;
+    private CuocoService cuocoService;
 
     @Autowired
-    private CuocoService cuocoService;
+    private PasswordEncoder passwordEncoder; // Aggiunto
 
     private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
 
     @GetMapping(value = "/register")
     public String showRegisterForm(Model model) {
-        model.addAttribute("utente", new Utente());
+        model.addAttribute("cuoco", new Cuoco());
         model.addAttribute("credenziali", new Credenziali());
         return "user/register";
     }
@@ -50,7 +49,22 @@ public class AuthenticationController {
     public String showLoginForm(Model model) {
         return "user/login";
     }
-
+    
+    @GetMapping(value = "/success")
+    public String success(Model model) {
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            return "user/index";
+        } else {
+            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Credenziali credenziali = credenzialiService.getCredenziali(userDetails.getUsername());
+            if (credenziali.getRuolo().equals(Credenziali.ADMIN_ROLE)) {
+                return "admin/adminIndex";
+            }
+        }
+        return "user/index";
+    }
+    
     @GetMapping(value = "/")
     public String home(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -96,33 +110,26 @@ public class AuthenticationController {
             e.printStackTrace();
         }
 
-        // Crea e salva l'utente
-        Utente utente = new Utente();
-        utente.setNome(nome);
-        utente.setCognome(cognome);
-        utente.setEmail(email);
-        utente.setDataDiNascita(LocalDate.parse(dataDiNascita));
-
-        Credenziali credenziali = new Credenziali();
-        credenziali.setUsername(username);
-        credenziali.setPassword(password);
-        credenziali.setUtente(utente);
-
+        // Crea e salva il cuoco
         Cuoco cuoco = new Cuoco();
         cuoco.setNome(nome);
         cuoco.setCognome(cognome);
-        cuoco.setDataDiNascita(LocalDate.parse(dataDiNascita)); // Conversione corretta
+        cuoco.setEmail(email);
+        cuoco.setDataDiNascita(LocalDate.parse(dataDiNascita));
         cuoco.setImmagine("/uploads/" + immagine.getOriginalFilename());
         cuoco.setDescrizione(descrizione);
-        cuoco.setUtente(utente);
 
-        utente.setCuoco(cuoco);
+        Credenziali credenziali = new Credenziali();
+        credenziali.setUsername(username);
+        credenziali.setPassword(passwordEncoder.encode(password)); // Criptare la password
+        credenziali.setRuolo(Credenziali.DEFAULT_ROLE);
+        credenziali.setCuoco(cuoco);
 
-        utenteService.saveUser(utente);
-        credenzialiService.saveCredenziali(credenziali);
+        cuoco.setCredenziali(credenziali);
+
         cuocoService.saveCuoco(cuoco);
 
-        model.addAttribute("utente", utente);
+        model.addAttribute("cuoco", cuoco);
         return "user/registrationSuccessful";
     }
 }

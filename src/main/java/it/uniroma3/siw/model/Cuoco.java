@@ -15,14 +15,15 @@ public class Cuoco {
     private String nome;
     private String cognome;
     private LocalDate dataDiNascita;
+    private String email;
     private String immagine;
-    private String descrizione; 
+    private String descrizione;
 
     @OneToMany(mappedBy = "cuoco", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ricetta> ricette = new ArrayList<>();
 
-    @OneToOne
-    private Utente utente;
+    @OneToOne(mappedBy = "cuoco", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Credenziali credenziali;
 
     // Getter e Setter
     public Long getId() {
@@ -57,6 +58,14 @@ public class Cuoco {
         this.dataDiNascita = dataDiNascita;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getImmagine() {
         return immagine;
     }
@@ -81,12 +90,12 @@ public class Cuoco {
         this.ricette = ricette;
     }
 
-    public Utente getUtente() {
-        return utente;
+    public Credenziali getCredenziali() {
+        return credenziali;
     }
 
-    public void setUtente(Utente utente) {
-        this.utente = utente;
+    public void setCredenziali(Credenziali credenziali) {
+        this.credenziali = credenziali;
     }
 
     // Metodi di utilità

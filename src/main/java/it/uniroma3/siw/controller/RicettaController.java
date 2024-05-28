@@ -117,6 +117,6 @@ public class RicettaController {
     private Cuoco getCurrentLoggedInCuoco() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Credenziali credenziali = (Credenziali) authentication.getPrincipal();
-        return cuocoService.findByUtente(credenziali.getUtente());
+        return cuocoService.findByUsername(credenziali.getUsername());
     }
 }

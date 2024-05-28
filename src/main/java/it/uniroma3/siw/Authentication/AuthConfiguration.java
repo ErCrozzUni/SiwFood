@@ -30,7 +30,7 @@ public class AuthConfiguration {
             .usersByUsernameQuery("SELECT username, password, 1 as enabled FROM credenziali WHERE username=?");
     }
 
-    @Bean //poiché password encoder è una classe al di fuori della libreria standard di spring, creiamo quindi un bean
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }

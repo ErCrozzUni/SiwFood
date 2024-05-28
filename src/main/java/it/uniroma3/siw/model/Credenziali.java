@@ -22,8 +22,8 @@ public class Credenziali {
     private String ruolo;
 
     @OneToOne
-    @JoinColumn(name = "utente_id", referencedColumnName = "id")
-    private Utente utente;
+    @JoinColumn(name = "cuoco_id", referencedColumnName = "id")
+    private Cuoco cuoco;
 
     // Getter e Setter
     public Long getId() {
@@ -58,11 +58,11 @@ public class Credenziali {
         this.ruolo = ruolo;
     }
 
-    public Utente getUtente() {
-        return utente;
+    public Cuoco getCuoco() {
+        return cuoco;
     }
 
-    public void setUtente(Utente utente) {
-        this.utente = utente;
+    public void setCuoco(Cuoco cuoco) {
+        this.cuoco = cuoco;
     }
 }

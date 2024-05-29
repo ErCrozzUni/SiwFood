@@ -40,7 +40,7 @@ public class RicettaController {
     @Autowired
     private IngredienteService ingredienteService;
 
-    private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
+    private static final String UPLOAD_DIR = "src/main/resources/static/images/ricette/";
 
     // Mostra tutte le ricette
     @GetMapping
@@ -86,7 +86,7 @@ public class RicettaController {
         Ricetta ricetta = new Ricetta();
         ricetta.setNome(nome);
         ricetta.setDescrizione(descrizione);
-        ricetta.setImmagine("/uploads/" + immagine.getOriginalFilename());
+        ricetta.setImmagine("/images/ricette/" + immagine.getOriginalFilename());
         ricetta.setCuoco(getCurrentLoggedInCuoco());
         ricettaService.saveRicetta(ricetta);
 

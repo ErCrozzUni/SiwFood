@@ -9,6 +9,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" href="/images/logo.png" type="image/png">
 </head>
 <body>
     <header>
@@ -48,6 +49,7 @@
                     <!-- Loop through ricette and display them -->
                     <div class="col-md-4" th:each="ricetta : ${ricette}">
                         <div class="card mb-4 shadow-sm">
+                            <img th:src="@{${ricetta.immagine}}" class="card-img-top" alt="Immagine Ricetta">
                             <div class="card-body">
                                 <h5 class="card-title" th:text="${ricetta.nome}">Nome Ricetta</h5>
                                 <p class="card-text" th:text="${ricetta.descrizione}">Descrizione Ricetta</p>

@@ -1,75 +1,54 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Nuovo Cuoco</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuoco - SIW Food</title>
     <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <!-- Custom CSS -->
-    <link href="/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" href="/images/logo.png" type="image/png">
 </head>
-<body class="bg-light-green">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light-green">
-        <div class="container-fluid">
-            <a class="navbar-brand logo-container" href="/">
-                <img src="/images/logo.png" alt="Logo" class="rounded-circle logo-img">
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg" style="background-color: #a080fc;">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" width="50" height="50" class="d-inline-block align-top rounded-circle" alt="SIW Food Logo">
             </a>
-            <div class="mx-auto">
-                <a class="navbar-brand mx-auto" href="/" style="color: #FF7F00; font-size: 2rem;">SiwFood</a>
-            </div>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Sign in</a>
+                        <a class="nav-link text-white" href="/"><i class="fas fa-home"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Sign up</a>
+                        <a class="nav-link text-white" href="/register"><i class="fas fa-user-plus"></i> Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/login"><i class="fas fa-user"></i> Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/ricette"><i class="fas fa-utensils"></i> Ricette</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/cuochi"><i class="fas fa-user-tie"></i> Cuochi</a>
                     </li>
                 </ul>
             </div>
-        </div>
-    </nav>
-
-    <!-- Content Section -->
-    <div class="container py-5">
-        <h1 class="text-center">Aggiungi Nuovo Cuoco</h1>
-        <form action="/cuochi" method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="nome">Nome</label>
-                <input type="text" class="form-control" id="nome" name="nome" required>
-            </div>
-            <div class="form-group">
-                <label for="cognome">Cognome</label>
-                <input type="text" class="form-control" id="cognome" name="cognome" required>
-            </div>
-            <div class="form-group">
-                <label for="dataDiNascita">Data di Nascita</label>
-                <input type="date" class="form-control" id="dataDiNascita" name="dataDiNascita" required>
-            </div>
-            <div class="form-group">
-                <label for="descrizione">Descrizione</label>
-                <textarea class="form-control" id="descrizione" name="descrizione" rows="3" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="immagine">Immagine</label>
-                <input type="file" class="form-control-file" id="immagine" name="immagine" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Aggiungi Cuoco</button>
-        </form>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer bg-orange text-center py-3">
-        <div class="container">
-            <span class="text-black">&copy; 2024 SiwFood. Tutti i diritti riservati.</span>
-        </div>
+        </nav>
+    </header>
+    <main class="d-flex flex-column align-items-center justify-content-center text-center flex-grow-1">
+        <section class="hero my-5">
+            <h1 class="mt-4" th:text="${cuoco.nome} + ' ' + ${cuoco.cognome}">Nome Cuoco</h1>
+            <p class="lead" th:text="${cuoco.dataDiNascita}">Data di Nascita</p>
+            <img th:src="@{${cuoco.immagine}}" alt="Immagine Cuoco" class="img-fluid">
+        </section>
+    </main>
+    <footer class="text-white text-center py-3" style="background-color: #a080fc;">
+        <p>&copy; 2024 SIW Food. All rights reserved.</p>
     </footer>
-
-    <!-- Bootstrap JS and dependencies -->
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.amazonaws.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

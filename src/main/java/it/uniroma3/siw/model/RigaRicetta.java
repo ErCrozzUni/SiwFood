@@ -6,11 +6,11 @@ import jakarta.persistence.*;
 public class RigaRicetta {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String quantita;
-
+ 
     @ManyToOne
     private Ricetta ricetta;
 

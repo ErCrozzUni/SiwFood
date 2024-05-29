@@ -34,9 +34,9 @@ public class AuthenticationController {
     private CuocoService cuocoService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder; // Aggiunto
+    private PasswordEncoder passwordEncoder;
 
-    private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
+    private static final String UPLOAD_DIR = "src/main/resources/static/images/cuochi/";
 
     @GetMapping(value = "/register")
     public String showRegisterForm(Model model) {
@@ -49,22 +49,7 @@ public class AuthenticationController {
     public String showLoginForm(Model model) {
         return "user/login";
     }
-    
-    @GetMapping(value = "/success")
-    public String success(Model model) {
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            return "user/index";
-        } else {
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Credenziali credenziali = credenzialiService.getCredenziali(userDetails.getUsername());
-            if (credenziali.getRuolo().equals(Credenziali.ADMIN_ROLE)) {
-                return "admin/adminIndex";
-            }
-        }
-        return "user/index";
-    }
-    
+
     @GetMapping(value = "/")
     public String home(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -80,6 +65,21 @@ public class AuthenticationController {
         return "user/index";
     }
 
+    @GetMapping(value = "/success")
+    public String success(Model model) {
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            return "user/index";
+        } else {
+            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Credenziali credenziali = credenzialiService.getCredenziali(userDetails.getUsername());
+            if (credenziali.getRuolo().equals(Credenziali.ADMIN_ROLE)) {
+                return "admin/adminIndex";
+            }
+        }
+        return "user/index";
+    }
+    
     @GetMapping(value = "/indexCuoco")
     public String defaultAfterLogin(Model model) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -116,12 +116,12 @@ public class AuthenticationController {
         cuoco.setCognome(cognome);
         cuoco.setEmail(email);
         cuoco.setDataDiNascita(LocalDate.parse(dataDiNascita));
-        cuoco.setImmagine("/uploads/" + immagine.getOriginalFilename());
+        cuoco.setImmagine("/images/cuochi/" + immagine.getOriginalFilename());
         cuoco.setDescrizione(descrizione);
 
         Credenziali credenziali = new Credenziali();
         credenziali.setUsername(username);
-        credenziali.setPassword(passwordEncoder.encode(password)); // Criptare la password
+        credenziali.setPassword(passwordEncoder.encode(password));
         credenziali.setRuolo(Credenziali.DEFAULT_ROLE);
         credenziali.setCuoco(cuoco);
 

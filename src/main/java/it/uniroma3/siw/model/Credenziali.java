@@ -9,7 +9,7 @@ public class Credenziali {
     public static final String ADMIN_ROLE = "ADMIN";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false, unique = true)

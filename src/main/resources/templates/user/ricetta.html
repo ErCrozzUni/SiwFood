@@ -41,7 +41,9 @@
     <main class="container mt-5">
         <div class="row">
             <div class="col-md-4">
-                <img th:src="@{${ricetta.immagine}}" class="img-fluid" alt="Immagine Ricetta">
+                <div class="card">
+                    <img th:src="@{${ricetta.immagine}}" class="card-img-top img-fluid" alt="Immagine Ricetta">
+                </div>
             </div>
             <div class="col-md-8">
                 <h1 th:text="${ricetta.nome}">Nome Ricetta</h1>
@@ -49,9 +51,11 @@
                     <a th:href="@{/cuochi/{id}(id=${ricetta.cuoco.id})}" th:text="${ricetta.cuoco.nome} + ' ' + ${ricetta.cuoco.cognome}">Nome Cuoco</a>
                 </p>
                 <p th:text="${ricetta.descrizione}">Descrizione Ricetta</p>
-                <ul>
-                    <li th:each="rigaRicetta : ${ricetta.righeRicetta}">
-                        <span th:text="${rigaRicetta.ingrediente.nome}">Ingrediente</span> - <span th:text="${rigaRicetta.quantita}">Quantità</span>
+                <h3>Ingredienti:</h3>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" th:each="rigaRicetta : ${ricetta.righeRicetta}">
+                        <span th:text="${rigaRicetta.ingrediente.nome}">Ingrediente</span>
+                        <span class="badge badge-primary badge-pill" th:text="${rigaRicetta.quantita}">Quantità</span>
                     </li>
                 </ul>
             </div>
@@ -63,6 +67,6 @@
     <!-- Bootstrap JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.amazonaws.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

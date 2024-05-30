@@ -40,7 +40,7 @@ public class AuthConfiguration {
         httpSecurity
             .csrf().disable()
             .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET, "/**").permitAll()  // Permette l'accesso a tutte le pagine
+                .requestMatchers(HttpMethod.GET, "/**", "/uploads/**").permitAll()  // Permette l'accesso a tutte le pagine
                 .requestMatchers(HttpMethod.POST, "/register", "/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/admin/**").hasAnyAuthority(ADMIN_ROLE)
                 .requestMatchers(HttpMethod.POST, "/admin/**").hasAnyAuthority(ADMIN_ROLE)

@@ -23,6 +23,7 @@ import it.uniroma3.siw.model.Credenziali;
 import it.uniroma3.siw.model.Cuoco;
 import it.uniroma3.siw.service.CredenzialiService;
 import it.uniroma3.siw.service.CuocoService;
+import it.uniroma3.siw.service.RicettaService;
 
 @Controller
 public class AuthenticationController {
@@ -33,6 +34,9 @@ public class AuthenticationController {
     @Autowired
     private CuocoService cuocoService;
 
+    @Autowired
+    private RicettaService ricettaService;
+    
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -59,6 +63,10 @@ public class AuthenticationController {
             UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             Credenziali credenziali = credenzialiService.getCredenziali(userDetails.getUsername());
             if (credenziali.getRuolo().equals(Credenziali.ADMIN_ROLE)) {
+            	long numeroCuochi = cuocoService.countCuochi();
+                long numeroRicette = ricettaService.countRicette();
+                model.addAttribute("numeroCuochi", numeroCuochi);
+                model.addAttribute("numeroRicette", numeroRicette);
                 return "admin/adminIndex";
             }
         }
@@ -74,6 +82,10 @@ public class AuthenticationController {
             UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             Credenziali credenziali = credenzialiService.getCredenziali(userDetails.getUsername());
             if (credenziali.getRuolo().equals(Credenziali.ADMIN_ROLE)) {
+            	long numeroCuochi = cuocoService.countCuochi();
+                long numeroRicette = ricettaService.countRicette();
+                model.addAttribute("numeroCuochi", numeroCuochi);
+                model.addAttribute("numeroRicette", numeroRicette);
                 return "admin/adminIndex";
             }
         }
@@ -85,6 +97,10 @@ public class AuthenticationController {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Credenziali credenziali = credenzialiService.getCredenziali(userDetails.getUsername());
         if (credenziali.getRuolo().equals(Credenziali.ADMIN_ROLE)) {
+        	long numeroCuochi = cuocoService.countCuochi();
+            long numeroRicette = ricettaService.countRicette();
+            model.addAttribute("numeroCuochi", numeroCuochi);
+            model.addAttribute("numeroRicette", numeroRicette);
             return "admin/adminIndex";
         }
         return "cuoco/indexCuoco";
@@ -131,5 +147,17 @@ public class AuthenticationController {
 
         model.addAttribute("cuoco", cuoco);
         return "user/registrationSuccessful";
+    }
+    
+    @GetMapping("/admin/cuochi")
+    public String manageCuochi(Model model) {
+        model.addAttribute("cuochi", cuocoService.findAll());
+        return "admin/adminManageCuochi";
+    }
+
+    @GetMapping("/admin/ricette")
+    public String manageRicette(Model model) {
+        model.addAttribute("ricette", ricettaService.findAll());
+        return "admin/adminManageRicette";
     }
 }

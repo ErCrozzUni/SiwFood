@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import it.uniroma3.siw.model.Cuoco;
 import it.uniroma3.siw.model.Ricetta;
 import it.uniroma3.siw.repository.RicettaRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class RicettaService {
@@ -41,5 +42,10 @@ public class RicettaService {
 
     public void deleteRicetta(Long id) {
         ricettaRepository.deleteById(id);
+    }
+    
+    @Transactional
+    public long countRicette() {
+        return ricettaRepository.count();
     }
 }

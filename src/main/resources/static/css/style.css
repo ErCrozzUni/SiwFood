@@ -49,3 +49,18 @@ footer {
     width: 100%;
     background-color: #a080fc;
 }
+
+.card-img-top {
+    object-fit: cover;
+    height: 200px; /* Altezza massima dell'immagine */
+}
+
+.card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body {
+    flex: 1;
+}

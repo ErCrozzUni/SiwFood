@@ -70,7 +70,7 @@ public class AuthenticationController {
                 return "admin/adminIndex";
             }
         }
-        return "user/index";
+        return "cuoco/indexCuoco";
     }
 
     @GetMapping(value = "/success")
@@ -89,7 +89,7 @@ public class AuthenticationController {
                 return "admin/adminIndex";
             }
         }
-        return "user/index";
+        return "cuoco/indexCuoco";
     }
     
     @GetMapping(value = "/indexCuoco")

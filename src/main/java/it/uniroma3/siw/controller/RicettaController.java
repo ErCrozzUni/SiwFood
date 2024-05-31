@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import it.uniroma3.siw.model.RigaRicetta;
 import it.uniroma3.siw.service.CuocoService;
 import it.uniroma3.siw.service.IngredienteService;
 import it.uniroma3.siw.service.RicettaService;
+import it.uniroma3.siw.service.RigaRicettaService;
 
 @Controller
 @RequestMapping("/ricette")
@@ -40,6 +42,9 @@ public class RicettaController {
     @Autowired
     private IngredienteService ingredienteService;
 
+    @Autowired
+    private RigaRicettaService rigaRicettaService;
+    
     private static final String UPLOAD_DIR = "src/main/resources/static/images/ricette/";
 
     // Mostra tutte le ricette
@@ -64,14 +69,14 @@ public class RicettaController {
         return "cuoco/formNewRicetta"; // restituisce il nome della vista per il form
     }
 
-    // Salva una nuova ricetta
-    @PostMapping("/new")
-    public String saveRicetta(@RequestParam String nome, 
-                              @RequestParam String descrizione, 
-                              @RequestParam MultipartFile immagine,
-                              @RequestParam List<Long> ingredientiId,
-                              @RequestParam List<String> quantita,
-                              Model model) {
+    @PostMapping("/cuoco/new")
+    public String createRicetta(@RequestParam("nome") String nome,
+                                @RequestParam("descrizione") String descrizione,
+                                @RequestParam("immagine") MultipartFile immagine,
+                                @RequestParam("ingredienti[]") List<String> ingredienti,
+                                @RequestParam("quantita[]") List<String> quantita,
+                                Principal principal,
+                                Model model) {
         // Salva l'immagine
         StringBuilder fileNames = new StringBuilder();
         Path fileNameAndPath = Paths.get(UPLOAD_DIR, immagine.getOriginalFilename());
@@ -82,28 +87,33 @@ public class RicettaController {
             e.printStackTrace();
         }
 
-        // Crea e salva la nuova ricetta
+        // Ottieni il cuoco attualmente loggato
+        String username = principal.getName();
+        Credenziali credenziali = cuocoService.findByUsername(username).getCredenziali();
+        Cuoco cuoco = credenziali.getCuoco();
+
+        // Crea e salva la ricetta
         Ricetta ricetta = new Ricetta();
         ricetta.setNome(nome);
         ricetta.setDescrizione(descrizione);
         ricetta.setImmagine("/images/ricette/" + immagine.getOriginalFilename());
-        ricetta.setCuoco(getCurrentLoggedInCuoco());
+        ricetta.setCuoco(cuoco);
         ricettaService.saveRicetta(ricetta);
 
-        // Aggiungi ingredienti alla ricetta
-        for (int i = 0; i < ingredientiId.size(); i++) {
-            Ingrediente ingrediente = ingredienteService.findById(ingredientiId.get(i)).orElse(null);
-            if (ingrediente != null) {
-                RigaRicetta rigaRicetta = new RigaRicetta();
-                rigaRicetta.setIngrediente(ingrediente);
-                rigaRicetta.setQuantita(quantita.get(i));
-                rigaRicetta.setRicetta(ricetta);
-                ricetta.getRigheRicetta().add(rigaRicetta); // Usa il getter per ottenere la lista
-            }
+        // Aggiungi ingredienti e righe ricetta
+        for (int i = 0; i < ingredienti.size(); i++) {
+            Ingrediente ingrediente = new Ingrediente();
+            ingrediente.setNome(ingredienti.get(i));
+            ingredienteService.saveIngrediente(ingrediente);
+
+            RigaRicetta rigaRicetta = new RigaRicetta();
+            rigaRicetta.setIngrediente(ingrediente);
+            rigaRicetta.setRicetta(ricetta);
+            rigaRicetta.setQuantita(quantita.get(i));
+            rigaRicettaService.saveRigaRicetta(rigaRicetta);
         }
 
-        ricettaService.saveRicetta(ricetta);
-        return "redirect:/cuoco/indexCuoco"; // reindirizza alla pagina delle ricette del cuoco
+        return "redirect:/cuoco/indexCuoco";
     }
 
     // Elimina una ricetta per ID
@@ -114,7 +124,8 @@ public class RicettaController {
     }
 
     // Ottiene l'utente loggato attualmente
-    private Cuoco getCurrentLoggedInCuoco() {
+    @SuppressWarnings("unused")
+	private Cuoco getCurrentLoggedInCuoco() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Credenziali credenziali = (Credenziali) authentication.getPrincipal();
         return cuocoService.findByUsername(credenziali.getUsername());

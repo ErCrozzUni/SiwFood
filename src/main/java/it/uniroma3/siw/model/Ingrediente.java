@@ -10,7 +10,6 @@ public class Ingrediente {
     private Long id;
 
     private String nome;
-    private String descrizione;
 
     // Getters e setters
     public Long getId() {
@@ -27,13 +26,5 @@ public class Ingrediente {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getDescrizione() {
-        return descrizione;
-    }
-
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
     }
 }

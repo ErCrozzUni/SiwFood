@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le Tue Ricette</title>
+    <title>SIW Food - Cuoco Index</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Font Awesome -->
@@ -25,15 +25,18 @@
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/ricette/new"><i class="fas fa-plus"></i> Aggiungi Ricetta</a>
+                    </li>
                 </ul>
             </div>
         </nav>
     </header>
     <main class="container mt-5">
-        <h1>Le tue ricette</h1>
-        <div class="mt-4">
-            <div>
-                <h4>Le tue ricette</h4>
+        <h1>Bentornato Cuoco</h1>
+        <div>
+            <h4>Le tue ricette</h4>
+            <div class="mt-4">
                 <ul class="list-group">
                     <li th:each="ricetta : ${ricette}" class="list-group-item d-flex justify-content-between align-items-center">
                         <div>

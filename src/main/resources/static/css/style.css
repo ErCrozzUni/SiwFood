@@ -64,3 +64,15 @@ footer {
 .card-body {
     flex: 1;
 }
+
+.card-img-container {
+    width: 100%;
+    overflow: hidden;
+    max-height: 300px; /* Adjust this value as needed */
+}
+
+.card-img-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}

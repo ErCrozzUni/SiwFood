@@ -30,8 +30,10 @@
         </nav>
     </header>
     <main class="container mt-5">
-        <h1>Nuova Ricetta</h1>
-        <form action="/success" method="post" enctype="multipart/form-data">
+        <div class="text-center">
+            <h1>Nuova Ricetta</h1>
+        </div>
+        <form action="/cuoco/newRicetta" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="nome">Nome</label>
                 <input type="text" id="nome" name="nome" class="form-control" required>

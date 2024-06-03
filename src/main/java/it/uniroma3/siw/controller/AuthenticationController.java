@@ -73,39 +73,6 @@ public class AuthenticationController {
         return "cuoco/indexCuoco";
     }
 
-    @GetMapping(value = "/success")
-    public String success(Model model) {
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            return "user/index";
-        } else {
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Credenziali credenziali = credenzialiService.getCredenziali(userDetails.getUsername());
-            if (credenziali.getRuolo().equals(Credenziali.ADMIN_ROLE)) {
-            	long numeroCuochi = cuocoService.countCuochi();
-                long numeroRicette = ricettaService.countRicette();
-                model.addAttribute("numeroCuochi", numeroCuochi);
-                model.addAttribute("numeroRicette", numeroRicette);
-                return "admin/adminIndex";
-            }
-        }
-        return "cuoco/indexCuoco";
-    }
-    
-    @GetMapping(value = "/indexCuoco")
-    public String defaultAfterLogin(Model model) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Credenziali credenziali = credenzialiService.getCredenziali(userDetails.getUsername());
-        if (credenziali.getRuolo().equals(Credenziali.ADMIN_ROLE)) {
-        	long numeroCuochi = cuocoService.countCuochi();
-            long numeroRicette = ricettaService.countRicette();
-            model.addAttribute("numeroCuochi", numeroCuochi);
-            model.addAttribute("numeroRicette", numeroRicette);
-            return "admin/adminIndex";
-        }
-        return "cuoco/indexCuoco";
-    }
-
     @PostMapping(value = { "/register" })
     public String registerUser(@RequestParam("nome") String nome,
                                @RequestParam("cognome") String cognome,

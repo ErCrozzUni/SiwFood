@@ -69,7 +69,7 @@ public class RicettaController {
         return "cuoco/formNewRicetta"; // restituisce il nome della vista per il form
     }
 
-    @PostMapping("/cuoco/new")
+    @PostMapping("/cuoco/newRicetta")
     public String createRicetta(@RequestParam("nome") String nome,
                                 @RequestParam("descrizione") String descrizione,
                                 @RequestParam("immagine") MultipartFile immagine,
@@ -105,15 +105,20 @@ public class RicettaController {
             Ingrediente ingrediente = new Ingrediente();
             ingrediente.setNome(ingredienti.get(i));
             ingredienteService.saveIngrediente(ingrediente);
-
             RigaRicetta rigaRicetta = new RigaRicetta();
+            ricetta.addRigaRicetta(rigaRicetta);
             rigaRicetta.setIngrediente(ingrediente);
             rigaRicetta.setRicetta(ricetta);
             rigaRicetta.setQuantita(quantita.get(i));
             rigaRicettaService.saveRigaRicetta(rigaRicetta);
         }
 
-        return "redirect:/cuoco/indexCuoco";
+        return "redirect:/cuoco/registrazioneRicettaSuccessful"; // reindirizza alla pagina di successo
+    }
+    
+    @GetMapping("/registrazioneRicettaSuccessful")
+    public String showRegistrationSuccessful() {
+        return "redirect:/cuoco/registrazioneRicettaSuccessful"; // restituisce il nome della vista
     }
 
     // Elimina una ricetta per ID
@@ -125,7 +130,7 @@ public class RicettaController {
 
     // Ottiene l'utente loggato attualmente
     @SuppressWarnings("unused")
-	private Cuoco getCurrentLoggedInCuoco() {
+    private Cuoco getCurrentLoggedInCuoco() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Credenziali credenziali = (Credenziali) authentication.getPrincipal();
         return cuocoService.findByUsername(credenziali.getUsername());

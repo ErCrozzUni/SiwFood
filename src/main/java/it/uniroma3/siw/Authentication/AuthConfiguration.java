@@ -42,7 +42,7 @@ public class AuthConfiguration {
             .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.GET, "/**", "/uploads/**").permitAll()  // Permette l'accesso a tutte le pagine
                 .requestMatchers(HttpMethod.POST, "/register", "/login").permitAll()
-                .requestMatchers(HttpMethod.POST, "/ricette/cuoco/new").authenticated()  // Permette l'accesso autenticato per creare una nuova ricetta
+                .requestMatchers(HttpMethod.POST, "/ricette/newRicetta").authenticated()  // Permette l'accesso autenticato per creare una nuova ricetta
                 .requestMatchers(HttpMethod.GET, "/admin/**").hasAnyAuthority(ADMIN_ROLE)
                 .requestMatchers(HttpMethod.POST, "/admin/**").hasAnyAuthority(ADMIN_ROLE)
                 .anyRequest().authenticated()

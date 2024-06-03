@@ -69,7 +69,7 @@ public class RicettaController {
         return "cuoco/formNewRicetta"; // restituisce il nome della vista per il form
     }
 
-    @PostMapping("/cuoco/newRicetta")
+    @PostMapping("/newRicetta")
     public String createRicetta(@RequestParam("nome") String nome,
                                 @RequestParam("descrizione") String descrizione,
                                 @RequestParam("immagine") MultipartFile immagine,
@@ -99,7 +99,7 @@ public class RicettaController {
         ricetta.setImmagine("/images/ricette/" + immagine.getOriginalFilename());
         ricetta.setCuoco(cuoco);
         ricettaService.saveRicetta(ricetta);
-
+        
         // Aggiungi ingredienti e righe ricetta
         for (int i = 0; i < ingredienti.size(); i++) {
             Ingrediente ingrediente = new Ingrediente();
@@ -112,13 +112,7 @@ public class RicettaController {
             rigaRicetta.setQuantita(quantita.get(i));
             rigaRicettaService.saveRigaRicetta(rigaRicetta);
         }
-
-        return "redirect:/cuoco/registrazioneRicettaSuccessful"; // reindirizza alla pagina di successo
-    }
-    
-    @GetMapping("/registrazioneRicettaSuccessful")
-    public String showRegistrationSuccessful() {
-        return "redirect:/cuoco/registrazioneRicettaSuccessful"; // restituisce il nome della vista
+        return "redirect:/cuoco/indexCuoco"; // reindirizza alla pagina di successo
     }
 
     // Elimina una ricetta per ID

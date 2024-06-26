@@ -2,7 +2,6 @@
 INSERT INTO cuoco (id, nome, cognome, data_di_nascita, immagine) VALUES(nextval('cuoco_seq'), 'Bruno', 'Barbieri', '1962-01-12', '/images/cuochi/Bruno-Barbieri.jpg');
 INSERT INTO cuoco (id, nome, cognome, data_di_nascita, immagine) VALUES(nextval('cuoco_seq'), 'Leonardo', 'Crozzoli', '2003-03-26', '/images/cuochi/Leonardo-Crozzoli.jpg');
 INSERT INTO cuoco (id, nome, cognome, data_di_nascita, immagine) VALUES(nextval('cuoco_seq'), 'Lorenzo', 'Benzi', '2002-01-16', '/images/cuochi/Lorenzo-Benzi.jpg');
-
 -- Inserimenti delle ricette
 INSERT INTO ricetta (id, nome, descrizione, cuoco_id, immagine) VALUES(nextval('ricetta_seq'), 'Cacio e Pepe', 'La nostra cacio e pepe è un omaggio alla tradizione culinaria romana, un piatto che incarna l essenza della cucina italiana con pochi e semplici ingredienti', (SELECT id FROM cuoco WHERE nome = 'Lorenzo' AND cognome = 'Benzi'), '/images/ricette/CacioePepe.jpg');
 INSERT INTO ricetta (id, nome, descrizione, cuoco_id, immagine) VALUES(nextval('ricetta_seq'), 'Lasagna', 'La nostra deliziosa lasagna è un tripudio di sapori italiani che conquista il palato ad ogni morso.', (SELECT id FROM cuoco WHERE nome = 'Bruno' AND cognome = 'Barbieri'), '/images/ricette/Lasagna.jpeg');

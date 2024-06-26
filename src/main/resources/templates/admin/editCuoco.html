@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuova Ricetta</title>
+    <title>Modifica Cuoco - SIW Food</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Font Awesome -->
@@ -31,30 +31,36 @@
     </header>
     <main class="container mt-5">
         <div class="text-center">
-            <h1>Nuova Ricetta</h1>
+            <h1>Modifica Cuoco</h1>
         </div>
-        <form action="/ricette/newRicetta" method="post" enctype="multipart/form-data">
+        <form action="/cuochi/edit" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" th:value="${cuoco.id}">
             <div class="form-group">
                 <label for="nome">Nome</label>
-                <input type="text" id="nome" name="nome" class="form-control" required>
+                <input type="text" id="nome" name="nome" class="form-control" th:value="${cuoco.nome}" required>
+            </div>
+            <div class="form-group">
+                <label for="cognome">Cognome</label>
+                <input type="text" id="cognome" name="cognome" class="form-control" th:value="${cuoco.cognome}" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" th:value="${cuoco.email}" required>
+            </div>
+            <div class="form-group">
+                <label for="dataDiNascita">Data di Nascita</label>
+                <input type="date" id="dataDiNascita" name="dataDiNascita" class="form-control" th:value="${cuoco.dataDiNascita}" required>
             </div>
             <div class="form-group">
                 <label for="descrizione">Descrizione</label>
-                <textarea id="descrizione" name="descrizione" class="form-control" rows="4" required></textarea>
+                <textarea id="descrizione" name="descrizione" class="form-control" rows="4" th:text="${cuoco.descrizione}" required></textarea>
             </div>
             <div class="form-group">
                 <label for="immagine">Immagine</label>
-                <input type="file" id="immagine" name="immagine" class="form-control" required>
+                <input type="file" id="immagine" name="immagine" class="form-control">
+                <img th:src="@{${cuoco.immagine}}" alt="Immagine Cuoco" width="100">
             </div>
-            <div id="ingredientiContainer">
-                <div class="form-group">
-                    <label for="ingredienti">Ingredienti</label>
-                    <input type="text" id="ingredienti" name="ingredienti[]" class="form-control" placeholder="Ingrediente" required>
-                    <input type="text" id="quantita" name="quantita[]" class="form-control mt-2" placeholder="Quantità" required>
-                </div>
-            </div>
-            <button type="button" id="addIngredienteBtn" class="btn btn-secondary">Aggiungi Ingrediente</button>
-            <button type="submit" class="btn btn-primary mt-3">Salva Ricetta</button>
+            <button type="submit" class="btn btn-primary mt-3">Salva Modifiche</button>
         </form>
     </main>
     <footer class="text-white text-center py-3" style="background-color: #a080fc;">
@@ -64,15 +70,5 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.amazonaws.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        document.getElementById('addIngredienteBtn').addEventListener('click', function() {
-            var container = document.getElementById('ingredientiContainer');
-            var div = document.createElement('div');
-            div.className = 'form-group';
-            div.innerHTML = '<input type="text" name="ingredienti[]" class="form-control mt-2" placeholder="Ingrediente" required>' +
-                            '<input type="text" name="quantita[]" class="form-control mt-2" placeholder="Quantità" required>';
-            container.appendChild(div);
-        });
-    </script>
 </body>
 </html>

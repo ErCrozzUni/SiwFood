@@ -70,13 +70,15 @@ public class RicettaController {
     }
 
     @PostMapping("/newRicetta")
-    public String createRicetta(@RequestParam("nome") String nome,
-                                @RequestParam("descrizione") String descrizione,
-                                @RequestParam("immagine") MultipartFile immagine,
-                                @RequestParam("ingredienti[]") List<String> ingredienti,
-                                @RequestParam("quantita[]") List<String> quantita,
-                                Principal principal,
-                                Model model) {
+    public String createRicetta(
+        @RequestParam("nome") String nome,
+        @RequestParam("descrizione") String descrizione,
+        @RequestParam("immagine") MultipartFile immagine,
+        @RequestParam("ingredienti[]") List<String> ingredienti,
+        @RequestParam("quantita[]") List<String> quantita,
+        Principal principal,
+        Model model) {
+        // Implementazione del metodo
         // Salva l'immagine
         StringBuilder fileNames = new StringBuilder();
         Path fileNameAndPath = Paths.get(UPLOAD_DIR, immagine.getOriginalFilename());
@@ -86,20 +88,17 @@ public class RicettaController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         // Ottieni il cuoco attualmente loggato
         String username = principal.getName();
         Credenziali credenziali = cuocoService.findByUsername(username).getCredenziali();
         Cuoco cuoco = credenziali.getCuoco();
-
         // Crea e salva la ricetta
         Ricetta ricetta = new Ricetta();
         ricetta.setNome(nome);
         ricetta.setDescrizione(descrizione);
         ricetta.setImmagine("/images/ricette/" + immagine.getOriginalFilename());
         ricetta.setCuoco(cuoco);
-        ricettaService.saveRicetta(ricetta);
-        
+        ricettaService.saveRicetta(ricetta);        
         // Aggiungi ingredienti e righe ricetta
         for (int i = 0; i < ingredienti.size(); i++) {
             Ingrediente ingrediente = new Ingrediente();
@@ -112,7 +111,7 @@ public class RicettaController {
             rigaRicetta.setQuantita(quantita.get(i));
             rigaRicettaService.saveRigaRicetta(rigaRicetta);
         }
-        return "redirect:/cuoco/indexCuoco"; // reindirizza alla pagina di successo
+        return "redirect:/"; // reindirizza alla pagina di successo
     }
 
     // Elimina una ricetta per ID
@@ -128,5 +127,58 @@ public class RicettaController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Credenziali credenziali = (Credenziali) authentication.getPrincipal();
         return cuocoService.findByUsername(credenziali.getUsername());
+    }
+    
+    @GetMapping("/admin/ricette")
+    public String manageRicette(Model model) {
+        model.addAttribute("ricette", ricettaService.findAll());
+        return "admin/adminManageRicette";
+    }
+    
+    @GetMapping("/edit/{id}")
+    public String showEditRicettaForm(@PathVariable("id") Long id, Model model) {
+        Ricetta ricetta = ricettaService.findById(id);
+        model.addAttribute("ricetta", ricetta);
+        return "admin/editRicetta";
+    }
+
+    @PostMapping("/edit")
+    public String editRicetta(@RequestParam("id") Long id,
+                              @RequestParam("nome") String nome,
+                              @RequestParam("descrizione") String descrizione,
+                              @RequestParam("immagine") MultipartFile immagine,
+                              @RequestParam("ingredienti[]") List<String> ingredienti,
+                              @RequestParam("quantita[]") List<String> quantita,
+                              Model model) {
+        Ricetta ricetta = ricettaService.findById(id);
+        ricetta.setNome(nome);
+        ricetta.setDescrizione(descrizione);
+
+        if (!immagine.isEmpty()) {
+            StringBuilder fileNames = new StringBuilder();
+            Path fileNameAndPath = Paths.get(UPLOAD_DIR, immagine.getOriginalFilename());
+            fileNames.append(immagine.getOriginalFilename());
+            try {
+                Files.write(fileNameAndPath, immagine.getBytes());
+                ricetta.setImmagine("/images/ricette/" + immagine.getOriginalFilename());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Aggiorna gli ingredienti e le righe della ricetta
+        ricetta.getRigheRicetta().clear();
+        for (int i = 0; i < ingredienti.size(); i++) {
+            Ingrediente ingrediente = new Ingrediente();
+            ingrediente.setNome(ingredienti.get(i));
+            RigaRicetta rigaRicetta = new RigaRicetta();
+            rigaRicetta.setIngrediente(ingrediente);
+            rigaRicetta.setQuantita(quantita.get(i));
+            ricetta.addRigaRicetta(rigaRicetta);
+        }
+
+        ricettaService.saveRicetta(ricetta);
+        model.addAttribute("ricetta", ricetta);
+        return "redirect:/admin/ricette";
     }
 }

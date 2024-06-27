@@ -169,11 +169,17 @@ public class RicettaController {
         // Aggiorna gli ingredienti e le righe della ricetta
         ricetta.getRigheRicetta().clear();
         for (int i = 0; i < ingredienti.size(); i++) {
-            Ingrediente ingrediente = new Ingrediente();
-            ingrediente.setNome(ingredienti.get(i));
+            Ingrediente ingrediente = ingredienteService.findByNome(ingredienti.get(i));
+            if (ingrediente == null) {
+                ingrediente = new Ingrediente();
+                ingrediente.setNome(ingredienti.get(i));
+                ingredienteService.saveIngrediente(ingrediente); // Salva l'ingrediente prima di utilizzarlo nella riga ricetta
+            }
+            
             RigaRicetta rigaRicetta = new RigaRicetta();
             rigaRicetta.setIngrediente(ingrediente);
             rigaRicetta.setQuantita(quantita.get(i));
+            rigaRicetta.setRicetta(ricetta);
             ricetta.addRigaRicetta(rigaRicetta);
         }
 
@@ -181,4 +187,5 @@ public class RicettaController {
         model.addAttribute("ricetta", ricetta);
         return "redirect:/admin/ricette";
     }
+
 }

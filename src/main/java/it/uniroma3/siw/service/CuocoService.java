@@ -22,7 +22,12 @@ public class CuocoService {
 	public Iterable<Cuoco> findAll() {
 		return cuocoRepository.findAll();
 	}
-
+	
+	@Transactional
+	public Boolean existsById(Long id) {
+		return (cuocoRepository.findById(id).orElse(null))!=null;
+	}
+	
 	@Transactional
 	public Cuoco saveCuoco(Cuoco cuoco) {
 		return cuocoRepository.save(cuoco);

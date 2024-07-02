@@ -14,7 +14,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +28,8 @@ import it.uniroma3.siw.model.Cuoco;
 import it.uniroma3.siw.model.Ricetta;
 import it.uniroma3.siw.service.CuocoService;
 import it.uniroma3.siw.service.RicettaService;
+import it.uniroma3.siw.validator.CuocoValidator;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/cuochi")
@@ -35,6 +40,14 @@ public class CuocoController {
 
     @Autowired
     private RicettaService ricettaService;
+    
+    @Autowired
+    private CuocoValidator cuocoValidator;
+    
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(cuocoValidator);
+    }
     
     private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
 
@@ -61,10 +74,11 @@ public class CuocoController {
 
     // Salva un nuovo cuoco
     @PostMapping
-    public String saveCuoco(@RequestParam("nome") String nome,
+    public String saveCuoco(@Valid @RequestParam("nome") String nome,
                             @RequestParam("cognome") String cognome,
                             @RequestParam("dataDiNascita") String dataDiNascita,
-                            @RequestParam("immagine") MultipartFile immagine) {
+                            @RequestParam("immagine") MultipartFile immagine,
+                            BindingResult bindingResult) {
         // Salva l'immagine
         StringBuilder fileNames = new StringBuilder();
         Path fileNameAndPath = Paths.get(UPLOAD_DIR, immagine.getOriginalFilename());
@@ -74,15 +88,18 @@ public class CuocoController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // Crea e salva il nuovo cuoco
-        Cuoco cuoco = new Cuoco();
-        cuoco.setNome(nome);
-        cuoco.setCognome(cognome);
-        cuoco.setDataDiNascita(LocalDate.parse(dataDiNascita)); // Conversione corretta
-        cuoco.setImmagine("/uploads/" + immagine.getOriginalFilename()); // Imposta il percorso dell'immagine
-
-        cuocoService.saveCuoco(cuoco);
+        if(bindingResult.hasErrors()) {
+        	return "user/formNewCuoco";
+        }else {
+	        // Crea e salva il nuovo cuoco
+	        Cuoco cuoco = new Cuoco();
+	        cuoco.setNome(nome);
+	        cuoco.setCognome(cognome);
+	        cuoco.setDataDiNascita(LocalDate.parse(dataDiNascita)); // Conversione corretta
+	        cuoco.setImmagine("/uploads/" + immagine.getOriginalFilename()); // Imposta il percorso dell'immagine
+	
+	        cuocoService.saveCuoco(cuoco);
+        }
         return "redirect:/cuochi"; // Reindirizza alla lista dei cuochi
     }
 

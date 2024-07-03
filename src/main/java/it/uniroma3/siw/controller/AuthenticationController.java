@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import it.uniroma3.siw.model.Credenziali;
 import it.uniroma3.siw.model.Cuoco;
+import it.uniroma3.siw.model.Ricetta;
 import it.uniroma3.siw.service.CredenzialiService;
 import it.uniroma3.siw.service.CuocoService;
 import it.uniroma3.siw.service.RicettaService;

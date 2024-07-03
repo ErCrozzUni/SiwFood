@@ -20,7 +20,7 @@ header {
 }
 
 .navbar-nav .nav-link:hover {
-    color: #2e3ee9;
+    color: #2e3ee9 !important;
 }
 
 main {
@@ -52,7 +52,7 @@ footer {
 
 .card-img-top {
     object-fit: cover;
-    height: 200px;
+    height: 200px; /* Altezza massima dell'immagine */
 }
 
 .card {
@@ -68,7 +68,7 @@ footer {
 .card-img-container {
     width: 100%;
     overflow: hidden;
-    max-height: 300px;
+    max-height: 300px; /* Adjust this value as needed */
 }
 
 .card-img-container img {

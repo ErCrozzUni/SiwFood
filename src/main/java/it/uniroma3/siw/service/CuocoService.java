@@ -49,9 +49,9 @@ public class CuocoService {
 	}
 
 	@Transactional
-	public Cuoco findByUsername(String username) {
-		return cuocoRepository.findByCredenzialiUsername(username);
-	}
+    public Cuoco findByUsername(String username) {
+        return cuocoRepository.findByUsernameWithRicette(username);
+    }
 	
 	@Transactional
     public long countCuochi() {

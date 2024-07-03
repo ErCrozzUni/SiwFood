@@ -118,7 +118,7 @@ public class RicettaController {
     @GetMapping("/delete/{id}")
     public String deleteRicetta(@PathVariable("id") Long id) {
         ricettaService.deleteRicetta(id);
-        return "redirect:/cuoco/indexCuoco"; // reindirizza alla lista delle ricette
+        return "redirect:/admin/ricette"; // reindirizza alla lista delle ricette
     }
 
     // Ottiene l'utente loggato attualmente

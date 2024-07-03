@@ -107,19 +107,20 @@ public class CuocoController {
     @GetMapping("/delete/{id}")
     public String deleteCuoco(@PathVariable("id") Long id) {
         cuocoService.deleteCuoco(id);
-        return "redirect:/cuochi"; // reindirizza alla lista dei cuochi
+        return "redirect:/"; // reindirizza alla lista dei cuochi
     }
     
     @GetMapping("/indexCuoco")
     public String showCuocoIndex(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();       
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUserName = ((UserDetails) authentication.getPrincipal()).getUsername();
-            Cuoco cuoco = cuocoService.findByUsername(currentUserName);
-            List<Ricetta> ricette = ricettaService.findRicetteByCuoco(cuoco);
-            model.addAttribute("ricette", ricette);
-        }     
+            Cuoco cuoco = cuocoService.findByUsername(currentUserName);           
+            if (cuoco != null) {
+                model.addAttribute("cuoco", cuoco);
+                model.addAttribute("ricette", cuoco.getRicette());
+            }
+        }       
         return "cuoco/indexCuoco";
     }
     
